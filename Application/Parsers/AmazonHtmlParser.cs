@@ -4,8 +4,13 @@ using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+
+[assembly: InternalsVisibleTo("Application.Tests")]
+
 
 namespace Application.Parsers
 {
@@ -21,7 +26,7 @@ namespace Application.Parsers
         {
             {
                 XPath.MusicContainer,
-                "//music-container//music-image-row"
+                ".//music-container//music-image-row"
             },
             {
                 XPath.MusicLink,
@@ -29,7 +34,7 @@ namespace Application.Parsers
             },
             {
                 XPath.PlaylistDetail,
-                "//music-detail-header"
+                ".//music-detail-header"
             }
         };
 
@@ -48,9 +53,9 @@ namespace Application.Parsers
         }
         private Playlist GetPlaylistInfo(HtmlDocument doc)
         {
-            var playlistDetail = doc.DocumentNode.SelectSingleNode(_xPathes[XPath.PlaylistDetail]);
+            var playlistDetail = doc.DocumentNode.SelectNodes(_xPathes[XPath.PlaylistDetail]);
 
-            var attributes = playlistDetail.Attributes;
+            var attributes = playlistDetail.Last().Attributes;
 
             string name = attributes
                 .Single(a => a.Name.Equals("headline"))
