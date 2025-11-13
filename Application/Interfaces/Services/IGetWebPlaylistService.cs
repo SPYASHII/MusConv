@@ -9,6 +9,6 @@ namespace Application.Interfaces.Services
 {
     internal interface IGetWebPlaylistService
     {
-        Playlist GetPlaylist(string url);
+        Task<Playlist> GetPlaylistAsync(string url);
     }
 }

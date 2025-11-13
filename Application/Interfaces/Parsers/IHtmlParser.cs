@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.Models;
+using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,6 @@ namespace Application.Interfaces.Parsers
 {
     internal interface IHtmlParser
     {
-
+        Playlist GetPlaylist(HtmlDocument htmlDocument);
     }
 }
