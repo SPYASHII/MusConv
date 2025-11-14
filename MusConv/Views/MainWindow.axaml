@@ -1,0 +1,119 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MusConv.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MusConv.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="MusConv">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <!--<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+    <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*">
+        
+                <!-- URL input field -->
+        <StackPanel Grid.Row="0" Spacing="10">
+            <TextBlock Text="Playlist URL:" FontWeight="Bold"/>
+            <TextBox Text="{Binding TargetUrl}" 
+                     Watermark="Enter URL..."
+                     IsEnabled="{Binding !IsLoading}"/>
+        </StackPanel>
+
+        <!-- Load button -->
+        <Button Grid.Row="1" 
+                Content="Load playlist"
+                Command="{Binding LoadCommand}"
+                IsEnabled="{Binding !IsLoading}"
+                HorizontalAlignment="Left"
+                Margin="0,10,0,0"
+                Padding="20,8"/>
+
+        <!-- Loading indicator and error -->
+        <StackPanel Grid.Row="2" Margin="0,10,0,0" Spacing="5">
+            <TextBlock Text="Loading..." 
+                       FontStyle="Italic"
+                       IsVisible="{Binding IsLoading}"/>
+            
+            <TextBlock Text="{Binding ErrorMessage}"
+                       Foreground="Red"
+                       TextWrapping="Wrap"
+                       IsVisible="{Binding ErrorMessage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+        </StackPanel>
+
+        <!-- Playlist info and track list -->
+<ScrollViewer Grid.Row="3" 
+              IsVisible="{Binding Playlist, Converter={x:Static ObjectConverters.IsNotNull}}">
+    <StackPanel Spacing="15">
+        
+        <!-- Playlist info -->
+        <Border Background="#141414" 
+                Padding="15" 
+                CornerRadius="5"
+                BorderBrush="#DDDDDD"
+                BorderThickness="1">
+            <StackPanel Spacing="5">
+                <TextBlock Text="{Binding Playlist.Name}" 
+                           FontSize="20" 
+                           FontWeight="Bold"/>
+                <TextBlock Text="{Binding Playlist.Description}" 
+                           TextWrapping="Wrap"
+                           Foreground="white"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Table header -->
+        <Border BorderBrush="#DDDDDD" 
+                BorderThickness="1,1,1,0"
+                Padding="10,8">
+            <Grid ColumnDefinitions="2*,2*,2*,Auto">
+                <TextBlock Grid.Column="0" Text="Name" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" Text="Artist" FontWeight="Bold" Margin="10,0,0,0"/>
+                <TextBlock Grid.Column="2" Text="Album" FontWeight="Bold" Margin="10,0,0,0"/>
+                <TextBlock Grid.Column="3" Text="Duration" FontWeight="Bold" Margin="10,0,0,0" Width="100"/>
+            </Grid>
+        </Border>
+
+        <!-- Track list -->
+        <ListBox ItemsSource="{Binding Playlist.Tracks}"
+                 BorderBrush="#DDDDDD"
+                 BorderThickness="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="#EEEEEE" 
+                            BorderThickness="0,0,0,1" 
+                            Padding="10,8">
+                        <Grid ColumnDefinitions="2*,2*,2*,Auto">
+                            <TextBlock Grid.Column="0" 
+                                       Text="{Binding Name}" 
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Grid.Column="1" 
+                                       Text="{Binding ArtistName}" 
+                                       Margin="10,0,0,0"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Grid.Column="2" 
+                                       Text="{Binding AlbumName}" 
+                                       Margin="10,0,0,0"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Grid.Column="3" 
+                                       Text="{Binding Duration}" 
+                                       Margin="10,0,0,0"
+                                       Width="100"
+                                       HorizontalAlignment="Right"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+    </StackPanel>
+</ScrollViewer>
+
+    </Grid>
+</Window>

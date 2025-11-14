@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace AvaloniaUi
+namespace MusConv.Views
 {
     public partial class MainWindow : Window
     {
