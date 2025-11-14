@@ -28,8 +28,8 @@ namespace MusConv.ViewModels
         }
         public string ErrorMessage
         {
-            get => _targetUrl;
-            set => this.RaiseAndSetIfChanged(ref _targetUrl, value);
+            get => _errorMessage;
+            set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
         }
         public ReactiveCommand<Unit, Unit> LoadCommand { get; }
 

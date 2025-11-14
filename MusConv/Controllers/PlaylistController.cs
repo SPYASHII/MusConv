@@ -22,6 +22,7 @@ namespace MusConv.Controllers
 
         private async void LoadPlaylistAsync()
         {
+            _vm.ErrorMessage = string.Empty;
             _vm.IsLoading = true;
 
             try
