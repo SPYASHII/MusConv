@@ -32,6 +32,7 @@ public class AmazonHtmlDownloader_Tests
 
         Assert.AreEqual("All Hits", actual.Name);
         Assert.AreEqual(60, actual.Tracks.Count());
+        Assert.IsFalse(string.IsNullOrEmpty(actual.ImageUrl));
     }
     [TestMethod]
     public void DownloadHtmlAsync_WithAlbumUrl_ReturnsCorrectHtml()
@@ -57,5 +58,6 @@ public class AmazonHtmlDownloader_Tests
 
         Assert.AreEqual("Violator", actual.Name);
         Assert.AreEqual(9, actual.Tracks.Count());
+        Assert.IsFalse(string.IsNullOrEmpty(actual.ImageUrl));
     }
 }

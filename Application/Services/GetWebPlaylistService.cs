@@ -41,9 +41,16 @@ namespace Application.Services
 
             var parser = _htmlInstrumentsFactory.CreateParser(url);
 
-            var playlist = parser.GetPlaylist(htmlDoc);
+            try
+            {
+                var playlist = parser.GetPlaylist(htmlDoc);
 
-            return playlist;
+                return playlist;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Failed to parse", ex);
+            }
         }
     }
 }

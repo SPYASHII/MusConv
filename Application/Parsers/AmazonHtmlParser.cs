@@ -103,20 +103,27 @@ namespace Application.Parsers
         {
             var playlistDetail = doc.DocumentNode.SelectNodes(_playlistXPathes[XPath.PlaylistDetail]);
 
-            var attributes = playlistDetail.Last().Attributes;
+            var playNode = playlistDetail.Last();
+
+            var attributes = playNode.Attributes;
 
             string name = attributes
                 .Single(a => a.Name.Equals("headline"))
                 .Value;
 
             string description = attributes
-                .SingleOrDefault(a => a.Name.Equals("secondary-text"))?
-                .Value ?? string.Empty;
+                .SingleOrDefault(a => a.Name.Equals("secondary-text"))
+                ?.Value ?? string.Empty;
+
+            string imgSrc = attributes
+                .SingleOrDefault(a => a.Name.Equals("image-src"))
+                ?.Value ?? string.Empty;
 
             var playlist = new Playlist()
             {
                 Name = name,
-                Description = description
+                Description = description,
+                ImageUrl = imgSrc
             };
 
             return playlist;
@@ -191,7 +198,9 @@ namespace Application.Parsers
         {
             var playlistDetail = doc.DocumentNode.SelectNodes(_albumXPathes[XPath.PlaylistDetail]);
 
-            var attributes = playlistDetail.Last().Attributes;
+            var albumNode = playlistDetail.Last();
+
+            var attributes = albumNode.Attributes;
 
             string name = attributes
                 .Single(a => a.Name.Equals("headline"))
@@ -201,9 +210,14 @@ namespace Application.Parsers
                 .Single(a => a.Name.Equals("primary-text"))
                 .Value;
 
+            string imgSrc = attributes
+                .SingleOrDefault(a => a.Name.Equals("image-src"))
+                ?.Value ?? string.Empty;
+
             var playlist = new Playlist()
             {
-                Name = name
+                Name = name,
+                ImageUrl = imgSrc
             };
 
             return playlist;
