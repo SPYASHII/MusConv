@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Downloaders;
 using Application.Enums;
+using Application.Interfaces.Downloaders;
 using Application.Interfaces.Factories;
 using Application.Interfaces.Parsers;
 using Application.Parsers;
 
 namespace Application.Factories
 {
-    internal class SimpleHtmlParserFactory : IHtmlParserFactory
+    internal class SimpleHtmlParserFactory : IHtmlInstrumentsFactory
     {
         Dictionary<string, Domens> _domens;
         SimpleHtmlParserFactory(Dictionary<string, Domens> domens)
         {
             _domens = domens;
         }
+        #region Parsers
         private static IHtmlParser? _amazonParser;
         private static IHtmlParser AmazonParser
         {
@@ -32,8 +35,47 @@ namespace Application.Factories
         {
             { Domens.Amazon, AmazonParser}
         };
+        #endregion
+        #region Downloaders
+        private static IHtmlDownloader? _amazonDownloader;
+        private static IHtmlDownloader AmazonDownloader
+        {
+            get
+            {
+                _amazonDownloader ??= new AmazonHtmlDownloader();
 
-        public IHtmlParser Create(string url)
+                return _amazonDownloader;
+            }
+        }
+        Dictionary<Domens, IHtmlDownloader> _downloadersForDomens = new()
+        {
+            { Domens.Amazon, AmazonDownloader}
+        };
+        #endregion
+
+        public IHtmlDownloader CreateDownloader(string url)
+        {
+            Domens domen = SelectAndCheckDomen(url);
+
+            return GetHtmlDownloader(domen);
+        }
+        public IHtmlParser CreateParser(string url)
+        {
+            Domens domen = SelectAndCheckDomen(url);
+
+            return GetHtmlParser(domen);
+        }
+
+        private IHtmlDownloader GetHtmlDownloader(Domens domen)
+        {
+            return _downloadersForDomens[domen];
+        }
+        private IHtmlParser GetHtmlParser(Domens domen)
+        {
+            return _parsersForDomens[domen];
+        }
+
+        private Domens SelectAndCheckDomen(string url)
         {
             Domens domen = SelectDomen(url);
 
@@ -44,11 +86,7 @@ namespace Application.Factories
                 throw new ArgumentException(message);
             }
 
-            return GetHtmlParser(domen);
-        }
-        private IHtmlParser GetHtmlParser(Domens domen)
-        {
-            return _parsersForDomens[domen];
+            return domen;
         }
         private Domens SelectDomen(string url)
         {
@@ -69,6 +107,7 @@ namespace Application.Factories
 
             return domen;
         }
+
         private string GetInvalidDomenMessage(string url)
         {
 

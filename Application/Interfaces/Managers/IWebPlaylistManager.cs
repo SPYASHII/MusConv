@@ -9,6 +9,6 @@ namespace Application.Interfaces.Managers
 {
     public interface IWebPlaylistManager
     {
-        Playlist GetPlaylist(string url);
+        Task<Playlist> GetPlaylistAsync(string url);
     }
 }

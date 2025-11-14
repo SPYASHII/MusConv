@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Factories;
+﻿using Application.Interfaces.Downloaders;
+using Application.Interfaces.Factories;
 using Application.Interfaces.Services;
 using Domain.Models;
 using HtmlAgilityPack;
@@ -13,19 +14,24 @@ namespace Application.Services
 {
     internal class GetWebPlaylistService : IGetWebPlaylistService
     {
-        private IHtmlParserFactory _htmlParserFactory;
-        public GetWebPlaylistService(IHtmlParserFactory factory)
+        private IHtmlInstrumentsFactory _htmlInstrumentsFactory;
+        public GetWebPlaylistService(IHtmlInstrumentsFactory factory)
         {
-            _htmlParserFactory = factory;
+            _htmlInstrumentsFactory = factory;
         }
 
         public async Task<Playlist> GetPlaylistAsync(string url)
         {
-            HtmlWeb web = new HtmlWeb();
+            var web = _htmlInstrumentsFactory.CreateDownloader(url);
 
-            var htmlDoc = await web.LoadFromWebAsync(url);
+            string html = await web.DownloadHtmlAsync(url);
 
-            var parser = _htmlParserFactory.Create(url);
+
+            var htmlDoc = new HtmlDocument();
+
+            htmlDoc.LoadHtml(html);
+
+            var parser = _htmlInstrumentsFactory.CreateParser(url);
 
             var playlist = parser.GetPlaylist(htmlDoc);
 
