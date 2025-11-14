@@ -65,7 +65,7 @@ namespace Application.Parsers
         {
             var playlistType = GetPlaylistType(doc);
 
-            switch(playlistType)
+            switch (playlistType)
             {
                 case PlaylistType.Playlist:
                     return BuildPlaylist(doc);
@@ -150,7 +150,7 @@ namespace Application.Parsers
             string name = GetTextFromLinkAndFormat(musicLinks[0]);
             string artistName = GetTextFromLinkAndFormat(musicLinks[1]);
             string albumName = GetTextFromLinkAndFormat(musicLinks[2]);
-            string duration = FormatText(musicLinks[3].InnerText.Trim());
+            string duration = GetDurationFromLinks(musicLinks);
 
             var track = new Track()
             {
@@ -163,13 +163,28 @@ namespace Application.Parsers
             return track;
         }
         #endregion
+        private string GetDurationFromLinks(HtmlNodeCollection nodes)
+        {
+            string duration = string.Empty;
+
+            foreach (var node in nodes)
+            {
+                duration = node.SelectSingleNode("span")?.InnerText.Trim() ?? string.Empty;
+
+                if (duration != string.Empty)
+                    break;
+            }
+
+
+            return duration;
+        }
         private string GetTextFromLinkAndFormat(HtmlNode node)
         {
             var text = node.SelectSingleNode("a").InnerText.Trim();
 
             return FormatText(text);
         }
-        private string FormatText(string text )
+        private string FormatText(string text)
         {
             text = text.Replace("amp;", "");
 
@@ -188,7 +203,7 @@ namespace Application.Parsers
         }
         private void SetAuthorAndAlbum(Playlist album, string author)
         {
-            foreach(var track in album.Tracks)
+            foreach (var track in album.Tracks)
             {
                 track.ArtistName = author;
                 track.AlbumName = album.Name;
@@ -243,7 +258,7 @@ namespace Application.Parsers
 
             string name = GetTextFromLinkAndFormat(musicLinks[0]);
 
-            string duration = FormatText(musicLinks[1].InnerText.Trim());
+            string duration = GetDurationFromLinks(musicLinks);
 
             var track = new Track()
             {
