@@ -24,8 +24,16 @@ namespace Application.Services
         {
             var web = _htmlInstrumentsFactory.CreateDownloader(url);
 
-            string html = await web.DownloadHtmlAsync(url);
+            string html = string.Empty;
 
+            try
+            {
+                html = await web.DownloadHtmlAsync(url);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to download", ex);
+            }
 
             var htmlDoc = new HtmlDocument();
 

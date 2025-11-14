@@ -114,6 +114,8 @@ namespace Application.Factories
             var message = new StringBuilder("Can`t scrape data from ");
 
             message = message.Append(url + ".");
+            message.AppendLine();
+
 
             message.AppendLine("Available domens:");
             message.AppendLine();

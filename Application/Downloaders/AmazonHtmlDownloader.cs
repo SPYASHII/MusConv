@@ -31,7 +31,10 @@ namespace Application.Downloaders
         }
         private string DownloadHtml(string url)
         {
-            using var driver = new ChromeDriver(_chromeOptions);
+            var service = ChromeDriverService.CreateDefaultService();
+            service.HideCommandPromptWindow = true;
+
+            using var driver = new ChromeDriver(service, _chromeOptions);
 
             driver.Url = url;
 
@@ -43,11 +46,17 @@ namespace Application.Downloaders
                 {
                     bool loaded = false;
 
-                    IWebElement playlist = driver.FindElement(By.CssSelector("music-detail-header[secondary-text]"));
+                    IWebElement playlist = driver.FindElement(By.CssSelector("music-detail-header[primary-text]"));
 
-                    IWebElement track = driver.FindElement(By.CssSelector("music-image-row[primary-text]"));
+                    var trackImage = driver.FindElements(By.CssSelector("music-image-row[primary-text]"));
+                    var trackText = driver.FindElements(By.CssSelector("music-text-row[primary-text]"));
 
-                    loaded = playlist.Displayed && track.Displayed;
+
+                    bool hasVisibleTrack =
+                        (trackImage.Count > 0 && trackImage[0].Displayed) ||
+                        (trackText.Count > 0 && trackText[0].Displayed);
+
+                    loaded = playlist.Displayed && true;
 
                     return loaded;
                 }
