@@ -140,10 +140,10 @@ namespace Application.Parsers
         {
             var musicLinks = musicContainer.SelectNodes(_playlistXPathes[XPath.MusicLink]);
 
-            string name = musicLinks[0].InnerText.Trim();
-            string artistName = musicLinks[1].InnerText.Trim();
-            string albumName = musicLinks[2].InnerText.Trim();
-            string duration = musicLinks[3].InnerText.Trim();
+            string name = GetTextFromLinkAndFormat(musicLinks[0]);
+            string artistName = GetTextFromLinkAndFormat(musicLinks[1]);
+            string albumName = GetTextFromLinkAndFormat(musicLinks[2]);
+            string duration = FormatText(musicLinks[3].InnerText.Trim());
 
             var track = new Track()
             {
@@ -156,6 +156,18 @@ namespace Application.Parsers
             return track;
         }
         #endregion
+        private string GetTextFromLinkAndFormat(HtmlNode node)
+        {
+            var text = node.SelectSingleNode("a").InnerText.Trim();
+
+            return FormatText(text);
+        }
+        private string FormatText(string text )
+        {
+            text = text.Replace("amp;", "");
+
+            return text;
+        }
         #region Album
         private Playlist BuildAlbum(HtmlDocument doc)
         {
@@ -215,9 +227,9 @@ namespace Application.Parsers
         {
             var musicLinks = musicContainer.SelectNodes(_albumXPathes[XPath.MusicLink]);
 
-            string name = musicLinks[0].InnerText.Trim();
+            string name = GetTextFromLinkAndFormat(musicLinks[0]);
 
-            string duration = musicLinks[1].InnerText.Trim();
+            string duration = FormatText(musicLinks[1].InnerText.Trim());
 
             var track = new Track()
             {
