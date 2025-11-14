@@ -12,10 +12,10 @@ using Application.Parsers;
 
 namespace Application.Factories
 {
-    internal class SimpleHtmlParserFactory : IHtmlInstrumentsFactory
+    internal class SimpleHtmlInstrumentsFactory : IHtmlInstrumentsFactory
     {
         Dictionary<string, Domens> _domens;
-        SimpleHtmlParserFactory(Dictionary<string, Domens> domens)
+        public SimpleHtmlInstrumentsFactory(Dictionary<string, Domens> domens)
         {
             _domens = domens;
         }

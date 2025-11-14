@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Enums
 {
-    public enum Domens
+    internal enum Domens
     {
         None = 0,
         Amazon
