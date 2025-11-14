@@ -10,6 +10,7 @@ namespace Domain.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public string? ImageUrl { get; set; }
         public IEnumerable<Track>? Tracks { get; set; }
     }
 }
